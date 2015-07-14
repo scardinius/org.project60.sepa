@@ -143,4 +143,17 @@ class CRM_Utils_SepaOptionGroupTools {
       return $ts?ts('on an irregular basis', array('domain' => 'org.project60.sepa')):'on an irregular basis';
     }
   }
+
+  /**
+   * Sanitize file format name which is used in directory name.
+   *
+   * @param $fileFormat
+   *
+   * @return mixed
+   */
+  public static function sanitizeFileFormat($fileFormat) {
+    $fileFormat = preg_replace(array('/[^a-zA-Z0-9]+/'), '_', $fileFormat);
+
+    return $fileFormat;
+  }
 }
