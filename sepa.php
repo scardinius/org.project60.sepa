@@ -569,6 +569,27 @@ function sepa_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissi
  * make sure, people don't create (broken) payment with SDD payment instrument, but w/o mandates
  */
 function sepa_civicrm_validateForm( $formName, &$fields, &$files, &$form, &$errors ) {
+
+  if ($formName == 'CRM_Contribute_Form_Contribution' && $fields['_qf_Contribution_next'] == 'Delete') {
+    $contribution_id = $form->getVar('_id');
+    $query = "SELECT id, entity_table
+              FROM civicrm_sdd_mandate
+              WHERE entity_id = %1 AND entity_table = 'civicrm_contribution'
+              UNION
+              SELECT id, entity_table
+              FROM civicrm_sdd_mandate
+              WHERE entity_id IN (SELECT contribution_recur_id
+              FROM civicrm_contribution
+              WHERE id = %1 AND contribution_recur_id IS NOT NULL) AND entity_table = 'civicrm_contribution_recur'";
+    $params = array(
+      1 => array($contribution_id, 'Integer'),
+    );
+    $result = CRM_Core_DAO::executeQuery($query, $params);
+    if ($result->fetch()) {
+      CRM_Core_Error::fatal(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!"), $result->id));
+    }
+  }
+
   if ($formName == 'CRM_Contribute_Form_Contribution') {
     // we'll just focus on the payment_instrument_id 
     if (empty($fields['payment_instrument_id'])) return;
