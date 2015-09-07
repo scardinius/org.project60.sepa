@@ -213,7 +213,7 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
     // first, try to load contact
     $contact = civicrm_api('Contact', 'getsingle', array('version' => 3, 'id' => $contact_id));
     if (isset($contact['is_error']) && $contact['is_error']) {
-      CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.project60.sepa')), $cid), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
+      CRM_Core_Session::setStatus(sprintf(ts("Couldn't find contact #%s", array('domain' => 'org.project60.sepa')), $contact_id), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
       $this->assign("display_name", "ERROR");
       return;
     }
@@ -226,7 +226,7 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
     $campaigns = array();
     $campaigns[''] = ts("No Campaign");
     if (isset($campaign_query['is_error']) && $campaign_query['is_error']) {
-      CRM_Core_Session::setStatus(sprintf(ts("Couldn't load campaign list.", array('domain' => 'org.project60.sepa')), $cid), ts('Error', array('domain' => 'org.project60.sepa')), 'error');      
+      CRM_Core_Session::setStatus(ts("Couldn't load campaign list.", array('domain' => 'org.project60.sepa')), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
     } else {
       foreach ($campaign_query['values'] as $campaign_id => $campaign) {
         $campaigns[$campaign_id] = $campaign['title'];
@@ -294,7 +294,7 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
     $creditor_query = civicrm_api('SepaCreditor', 'get', array('version' => 3));
     $creditors = array();
     if (isset($creditor_query['is_error']) && $creditor_query['is_error']) {
-      CRM_Core_Session::setStatus(sprintf(ts("Couldn't find any creditors.", array('domain' => 'org.project60.sepa')), $cid), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
+      CRM_Core_Session::setStatus(ts("Couldn't find any creditors.", array('domain' => 'org.project60.sepa')), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
     } else {
       foreach ($creditor_query['values'] as $creditor_id => $creditor) {
         $creditors[$creditor_id] = $creditor['name'];
@@ -327,6 +327,8 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
         $this->assign('creditor_id', $default_creditor->id);
       }
     }
+
+    $this->assign('mandate_type', isset($_REQUEST['mandate_type']) ? $_REQUEST['mandate_type'] : 'RCUR');
   }
 
 
