@@ -90,6 +90,12 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
     $payment_instrument_id = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', $type);
     $contribution_status_id = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
 
+    $params = array(
+      'id' => $_REQUEST['creditor_id'],
+      'return' => 'currency'
+    );
+    $creditor = civicrm_api3('SepaCreditor', 'getsingle', $params);
+
     $contribution_data = array(
         'version'                   => 3,
         'contact_id'                => $_REQUEST['contact_id'],
@@ -97,7 +103,7 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
         'financial_type_id'         => $_REQUEST['financial_type_id'],
         'payment_instrument_id'     => $payment_instrument_id,
         'contribution_status_id'    => $contribution_status_id,
-        'currency'                  => 'EUR',
+        'currency'                  => $creditor['currency'],
       );
 
     if ($type=='OOFF') {
@@ -293,14 +299,17 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
     // look up creditors
     $creditor_query = civicrm_api('SepaCreditor', 'get', array('version' => 3));
     $creditors = array();
+    $creditor_currency = array();
     if (isset($creditor_query['is_error']) && $creditor_query['is_error']) {
       CRM_Core_Session::setStatus(ts("Couldn't find any creditors.", array('domain' => 'org.project60.sepa')), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
     } else {
       foreach ($creditor_query['values'] as $creditor_id => $creditor) {
         $creditors[$creditor_id] = $creditor['name'];
+        $creditor_currency[$creditor_id] = $creditor['currency'];
       }
     }
     $this->assign('creditors', $creditors);
+    $this->assign('creditor_currency', json_encode($creditor_currency));
     
     // add cycle_days per creditor
     $creditor2cycledays = array();
