@@ -121,13 +121,9 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         // do not use array_merge() because it discards the original indizes
         $country_ids = array('' => ts('- select -', array('domain' => 'org.project60.sepa'))) + $filtered;
 
-        $query = "SELECT count(id) AS test
-                  FROM civicrm_extension
-                  WHERE full_name = 'pl.infozmiana.sepamandatebatch' AND is_active = 1";
-        $extensionEnabled = CRM_Core_DAO::singleValueQuery($query);
-        $this->assign('extension_enabled', $extensionEnabled);
-
-        if ($extensionEnabled) {
+        $multi_currency = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', 'multi_currency');
+        $this->assign('multi_currency', $multi_currency);
+        if ($multi_currency) {
           $currencies_enabled = CRM_Core_OptionGroup::values('currencies_enabled');
           $currencies_dict = array('' => ts('- select -'));
           foreach ((array)$currencies_enabled as $k => $v) {
@@ -151,7 +147,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         $this->addElement('text',       'addcreditor_id',           ts("Identifier", array('domain' => 'org.project60.sepa')));
         $this->addElement('text',       'addcreditor_address',      ts("Address", array('domain' => 'org.project60.sepa')), array('size' => 60));
         $this->addElement('select',     'addcreditor_country_id',   ts("Country", array('domain' => 'org.project60.sepa')), $country_ids);
-        if ($extensionEnabled) {
+        if ($multi_currency) {
           $this->addElement('select',     'addcreditor_currency',     ts("Currency", array('domain' => 'org.project60.sepa')), $currencies_dict);
         }
         $this->addElement('text',       'addcreditor_bic',          ts("BIC", array('domain' => 'org.project60.sepa')));
@@ -214,6 +210,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         // add general config options
         $amm_options = CRM_Sepa_Logic_Settings::getSetting('allow_mandate_modification')?array('checked'=>'checked'):array();
         $this->addElement('checkbox', 'allow_mandate_modification', ts("Mandate Modifications", array('domain' => 'org.project60.sepa')), NULL, $amm_options);
+        $this->addElement('checkbox', 'multi_currency_field', ts("Multi currency mode (not only EUR)", array('domain' => 'org.project60.sepa')), NULL, $multi_currency ? array('checked'=>'checked') : array());
 
         parent::buildQuickForm();
     }
@@ -244,6 +241,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         CRM_Core_BAO_Setting::setItem((isset($values['pp_hide_billing'])      ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_hide_billing');
         CRM_Core_BAO_Setting::setItem((isset($values['pp_improve_frequency']) ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_improve_frequency');
         CRM_Core_BAO_Setting::setItem((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'SEPA Direct Debit Preferences', 'pp_buffer_days');
+        CRM_Core_BAO_Setting::setItem((isset($values['multi_currency_field']) ? 1 : 0), 'SEPA Direct Debit Preferences', 'multi_currency');
 
         $session = CRM_Core_Session::singleton();
         $session->setStatus(ts("Settings successfully saved", array('domain' => 'org.project60.sepa')));
