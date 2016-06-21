@@ -211,6 +211,16 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         $default_mandate_element = $this->addElement('select', 'default_mandate_type', ts("Default Mandate Type", array('domain' => 'org.project60.sepa')), $mandate_types);
         $default_mandate_element->setSelected(CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', 'default_mandate_type'));
 
+        // import settings
+        $this->addElement('text', 'import_financial_type_id', ts("Financial type id", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_campaign_id', ts("Campaign id", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_collection_day', ts("Collection day", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_interval', ts("Interval", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_date_format', ts("Date format", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_thousands_delimiter', ts("Thousands delimiter", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_decimal_delimiter', ts("Decimal delimiter", array('domain' => 'org.project60.sepa')));
+        $this->addElement('text', 'import_contact_custom_field', ts("Contact custom field", array('domain' => 'org.project60.sepa')));
+
         parent::buildQuickForm();
     }
 
