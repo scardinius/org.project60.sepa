@@ -289,6 +289,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         CRM_Core_BAO_Setting::setItem((isset($values['multi_currency_field']) ? 1 : 0), 'SEPA Direct Debit Preferences', 'multi_currency');
         CRM_Core_BAO_Setting::setItem((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'SEPA Direct Debit Preferences', 'pp_buffer_days');
 
+        // save import settings
+        foreach ($this->import_fields as $key => $field) {
+            CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
+        }
+
         $session = CRM_Core_Session::singleton();
         $session->setStatus(ts("Settings successfully saved", array('domain' => 'org.project60.sepa')));
 
