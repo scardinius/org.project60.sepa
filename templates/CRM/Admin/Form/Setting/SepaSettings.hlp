@@ -129,3 +129,36 @@
     <p>{ts domain="org.project60.sepa"}If you have large amounts of mandates or large SDD groups, you might be at risk of a timeout error during the batching/closing process.{/ts}</p>
     <p>{ts domain="org.project60.sepa"}This option will activate a runner page with a progress bar for these critical processes. There shouldn't be any timeouts, but you have to keep that open until it's done.{/ts}</p>
 {/htxt}
+
+{htxt id='id-financial-type-id'}
+    <p>{ts domain="org.project60.sepa"}Default financial type used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-campaign-id'}
+    <p>{ts domain="org.project60.sepa"}Campaign used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-collection-day'}
+    <p>{ts domain="org.project60.sepa"}Collection day used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-interval'}
+    <p>{ts domain="org.project60.sepa"}Interval used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-date-format'}
+    <p>{ts domain="org.project60.sepa"}Date format used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-thousands-delimiter'}
+    <p>{ts domain="org.project60.sepa"}Amount thousands delimiter used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-decimal-delimiter'}
+    <p>{ts domain="org.project60.sepa"}Amount decimal delimiter used during import mandates from file.{/ts}</p>
+{/htxt}
+
+{htxt id='id-contact-custom-field'}
+    <p>{ts domain="org.project60.sepa"}Optional custom field of contact used during import mandates from file.{/ts}</p>
+{/htxt}
+

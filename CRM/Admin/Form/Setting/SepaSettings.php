@@ -21,6 +21,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
 {
     private $config_fields;
     private $custom_fields;
+    private $import_fields;
 
     function __construct() {
        parent::__construct();
@@ -45,6 +46,48 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
                          array('custom_RCUR_notice',     ts('Recurring&nbsp;notice&nbsp;days (follow-up)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_FRST_notice',     ts('Recurring&nbsp;notice&nbsp;days (initial)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_update_lock_timeout', ts('Update lock timeout', array('domain' => 'org.project60.sepa')), array('size' => 2)));
+      $this->import_fields = array(
+        'import_financial_type_id' => array(
+          'type' => 'text',
+          'label' => ts("Financial type id", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_campaign_id' => array(
+          'type' => 'text',
+          'label' => ts("Campaign id", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_collection_day' => array(
+          'type' => 'text',
+          'label' => ts("Collection day", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_interval' => array(
+          'type' => 'text',
+          'label' => ts("Interval", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_date_format' => array(
+          'type' => 'text',
+          'label' => ts("Date format", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_thousands_delimiter' => array(
+          'type' => 'text',
+          'label' => ts("Thousands delimiter", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_decimal_delimiter' => array(
+          'type' => 'text',
+          'label' => ts("Decimal delimiter", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_contact_custom_field' => array(
+          'type' => 'text',
+          'label' => ts("Contact custom field", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+      );
     }
 
     function domainToString($raw) {
@@ -218,6 +261,12 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         $default_mandate_element = $this->addElement('select', 'default_mandate_type', ts("Default Mandate Type"), $mandate_types);
         $default_mandate_element->setSelected(CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', 'default_mandate_type'));
 
+        // import settings
+        foreach ($this->import_fields as $key => $field) {
+          $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
+          $this->addElement($field['type'], $key, $field['label'], $field['options'])->setValue($value);
+        }
+
         parent::buildQuickForm();
     }
 
@@ -249,6 +298,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         CRM_Core_BAO_Setting::setItem((isset($values['pp_improve_frequency']) ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_improve_frequency');
         CRM_Core_BAO_Setting::setItem((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'SEPA Direct Debit Preferences', 'pp_buffer_days');
         CRM_Core_BAO_Setting::setItem((isset($values['multi_currency_field']) ? 1 : 0), 'SEPA Direct Debit Preferences', 'multi_currency');
+
+        // save import settings
+        foreach ($this->import_fields as $key => $field) {
+            CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
+        }
 
         $session = CRM_Core_Session::singleton();
         $session->setStatus(ts("Settings successfully saved", array('domain' => 'org.project60.sepa')));
