@@ -112,6 +112,32 @@
                 </td>
             </tr>{/if}{/if}{/if}
 
+          {if $sepa.bank_status eq '3' or $sepa.bank_status eq '5'}
+          <tr>
+            <td class="label" style="vertical-align: middle;">
+              <a class="button" onclick="mandate_action_suspend();">{ts domain="org.project60.sepa"}Suspend{/ts}</a>
+            </td>
+            <td>
+              <label for="restore_date">{ts domain="org.project60.sepa"}Suspend to:{/ts}</label>
+              <input type="text" name="restore_date" id="restore_date" size="12" value="" />
+              <br/>
+              <label for="suspend_noe">{ts domain="org.project60.sepa"}Note:{/ts}</label>
+              <input type="text" id="suspend_noe" name="suspend_note" size="32" />
+            </td>
+          </tr>
+          {/if}
+
+          {if $sepa.bank_status eq '7'}
+          <tr>
+            <td class="label" style="vertical-align: middle;">
+              <a class="button" onclick="mandate_action_restore();">{ts domain="org.project60.sepa"}Restore{/ts}</a>
+            </td>
+            <td>
+              Restore mandate to previous bank status.
+            </td>
+          </tr>
+          {/if}
+
             <tr>
             	<td class="label" style="vertical-align: middle;"><a href="{crmURL p="civicrm/sepa/cmandate" q="clone=$mandate_id"}" class="button">{ts domain="org.project60.sepa"}Clone{/ts}</td>
             	<td>{ts domain="org.project60.sepa"}Create a new mandate similar to this.{/ts}</td>
@@ -158,6 +184,16 @@ function mandate_action_delete() {
 function mandate_action_adjust_amount() {
     cj("#mandate_action_value").val('adjustamount');
     cj("#sepa_action_form").submit();
+}
+
+function mandate_action_suspend() {
+  cj("#mandate_action_value").val('suspend');
+  cj("#sepa_action_form").submit();
+}
+
+function mandate_action_restore() {
+  cj("#mandate_action_value").val('restore');
+  cj("#sepa_action_form").submit();
 }
 
 function mandate_action_cancel() {
@@ -210,6 +246,8 @@ cj('#replace_date').addClass('dateplugin');
 cj('#replace_date').datepicker(dateOptions);
 cj('#end_date').addClass('dateplugin');
 cj('#end_date').datepicker(dateOptions);
+cj('#restore_date').addClass('dateplugin');
+cj('#restore_date').datepicker(dateOptions);
 </script>
 {/literal}
 
