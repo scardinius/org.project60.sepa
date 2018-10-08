@@ -100,12 +100,14 @@ div.sdd-add-creditor {
                 {$form.addcreditor_country_id.html}
               </td>
             </tr>
-            <tr>
-              <td class="label">{$form.addcreditor_currency.label} <a onclick='CRM.help("{ts}Currency{/ts}", {literal}{"id":"id-currency","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts}Help{/ts}" class="helpicon">&nbsp;</a></td>
-              <td>
-                {$form.addcreditor_currency.html}
-              </td>
-            </tr>
+            {if $multi_currency}
+              <tr>
+                <td class="label">{$form.addcreditor_currency.label} <a onclick='CRM.help("{ts}Currency{/ts}", {literal}{"id":"id-currency","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts}Help{/ts}" class="helpicon">&nbsp;</a></td>
+                <td>
+                  {$form.addcreditor_currency.html}
+                </td>
+              </tr>
+            {/if}
             <tr>
               <td class="label">{$form.addcreditor_id.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Creditor Identifier{/ts}", {literal}{"id":"id-id","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
               <td>
@@ -295,6 +297,12 @@ div.sdd-add-creditor {
                 {$form.sdd_async_batching.html}
               </td>
             </tr>
+            <tr class="crm-alternative_batching-form-block-multi-currency">
+              <td class="label">{$form.multi_currency_field.label} <a onclick='CRM.help("{ts}Exclude Weekends{/ts}", {literal}{"id":"id-multi-currency","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts}Help{/ts}" class="helpicon">&nbsp;</a></td>
+              <td>
+                {$form.multi_currency_field.html}
+              </td>
+            </tr>
        </table>
        <br/>
        <h2>{ts domain="org.project60.sepa"}Payment Processor Settings{/ts}</h2>
@@ -330,6 +338,9 @@ div.sdd-add-creditor {
   </fieldset>
 </div>
 
+<script type="text/javascript">
+  var multi_currency = {$multi_currency};
+</script>
 {literal}
 <script type="text/javascript">
   cj('#edit_creditor_id').val("none");
@@ -479,7 +490,9 @@ div.sdd-add-creditor {
           cj('#addcreditor_name').val(data['name']);
           cj('#addcreditor_address').val(data['address']);
           cj('#addcreditor_country_id').val(data['country_id']);
-          cj('#addcreditor_currency').val(data['currency']);
+          if (multi_currency) {
+            cj('#addcreditor_currency').val(data['currency']);
+          }
           cj('#addcreditor_id').val(data['identifier']);
           cj('#addcreditor_iban').val(data['iban']);
           cj('#addcreditor_bic').val(data['bic']);
@@ -515,7 +528,9 @@ div.sdd-add-creditor {
     map["addcreditor_name"]         = "name";
     map["addcreditor_address"]      = "address";
     map["addcreditor_country_id"]   = "country_id";
-    map["addcreditor_currency"]     = "currency";
+    if (multi_currency) {
+      map["addcreditor_currency"]     = "currency";
+    }
     map["addcreditor_id"]           = "identifier";
     map["addcreditor_iban"]         = "iban";
     map["addcreditor_bic"]          = "bic";
