@@ -252,7 +252,7 @@ function sepa_civicrm_options() {
               'label' => ts('Bank BPH PL direct debit'),
               'is_default' => 0,
               'is_reserved' => 1,
-              'value' => 5,
+              'value' => 6,
             ),
           ),
         ),
