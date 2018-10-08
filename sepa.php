@@ -354,27 +354,6 @@ function sepa_civicrm_managed(&$entities) {
 }
 
 /**
- * Implementation of hook_civicrm_links
- *
- * @param $op
- * @param $objectName
- * @param $objectId
- * @param $links
- * @param $mask
- * @param $values
- */
-function sepa_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$values) {
-  if ($op == 'contact.selector.actions') {
-    $links[] = array(
-      'name' => 'Record SEPA Contribution',
-      'url' => CRM_Utils_System::url('civicrm/sepa/cmandate', "cid=$objectId"),
-      'title' => 'Record SEPA Contribution',
-      'ref' => 'record-sepa-contribution',
-    );
-  }
-}
-
-/**
  *  Support SEPA mandates in merge operations
  */
 function sepa_civicrm_merge ( $type, &$data, $mainId = NULL, $otherId = NULL, $tables = NULL ) {
@@ -422,6 +401,14 @@ function sepa_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$valu
         }
       }
     }
+  }
+  if ($op == 'contact.selector.actions') {
+    $links[] = array(
+      'name' => 'Record SEPA Contribution',
+      'url' => CRM_Utils_System::url('civicrm/sepa/cmandate', "cid=$objectId"),
+      'title' => 'Record SEPA Contribution',
+      'ref' => 'record-sepa-contribution',
+    );
   }
 }
 
