@@ -142,7 +142,9 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign("contributions",$r);
 
     $template->assign('settings', $format::$settings);
-    $details = $template->fetch('../formats/'.$this->fileFormat.'/transaction-details.tpl');
+    $s = DIRECTORY_SEPARATOR;
+    $file = dirname(__FILE__) . "{$s}..{$s}..{$s}..{$s}formats{$s}" . $this->fileFormat . '/transaction-details.tpl';
+    $details = $template->fetch($file);
     if ($format::$out_charset != 'UTF-8') {
       $details = iconv('UTF-8', $format::$out_charset, $details);
     }
