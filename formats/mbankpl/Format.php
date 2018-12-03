@@ -2,6 +2,9 @@
 
 class CRM_Sepa_Logic_Format_mbankpl extends CRM_Sepa_Logic_Format {
 
+  /** @var string Charset used in output files. */
+  public static $out_charset = 'ISO-8859-2';
+
   /** @var string Only accepted (3) or active (5) mandates should be processed */
   public static $generatexml_sql_where = ' AND mandate.bank_status IN (3, 5)';
 
